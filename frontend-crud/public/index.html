@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Persediaan Barang</title>
+    <style>
+        /* Gaya tampilan agar form berada di tengah dan rapi */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f4f4f9;
+        }
+
+        .container {
+            max-width: 500px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Form Persediaan</h2>
+
+        <form id="formBarang">
+            <div class="form-group">
+                <label for="kode_persediaan">Kode Persediaan</label>
+                <input type="text" id="kode_persediaan" placeholder="Contoh: BRG-001" required>
+            </div>
+
+            <div class="form-group">
+                <label for="nama_persediaan">Nama Persediaan</label>
+                <input type="text" id="nama_persediaan" placeholder="Contoh: Plastik Klip Bening" required>
+            </div>
+
+            <div class="form-group">
+                <label for="satuan">Satuan</label>
+                <select id="satuan">
+                    <option value="Pcs">Pcs</option>
+                    <option value="Box">Box</option>
+                    <option value="Kg">Kg</option>
+                    <option value="Roll">Roll</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="jumlah">Jumlah Stok</label>
+                <input type="number" id="jumlah" placeholder="Contoh: 100" required>
+            </div>
+
+            <div class="form-group">
+                <label for="berat">Berat (Gram)</label>
+                <input type="number" id="berat" placeholder="Contoh: 500" required>
+            </div>
+
+            <div class="form-group">
+                <label for="harga">Harga (Rp)</label>
+                <input type="number" id="harga" placeholder="Contoh: 25000" required>
+            </div>
+
+            <button type="submit">Simpan Barang</button>
+        </form>
+    </div>
+    <script>
+        // 1. Ambil elemen form berdasarkan ID-nya
+        const formBarang = document.getElementById('formBarang');
+
+        // 2. Pasang fungsi pengintai (Event Listener) ketika form di-submit (tombol diklik)
+        formBarang.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Mencegah browser agar tidak refresh halaman
+
+            // 3. Ambil data nilai dari masing-masing kolom inputan
+            const dataBarang = {
+                kode_persediaan: document.getElementById('kode_persediaan').value,
+                nama_persediaan: document.getElementById('nama_persediaan').value,
+                satuan: document.getElementById('satuan').value,
+                jumlah: parseInt(document.getElementById('jumlah').value), // <-- Tambahkan ini
+                berat: parseInt(document.getElementById('berat').value),
+                harga: parseInt(document.getElementById('harga').value)
+            };
+            try {
+                // 4. Tembakkan data ke API Backend Laravel menggunakan metode POST
+                const response = await fetch('http://127.0.0.1:8000/api/items', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(dataBarang) // Ubah data objek javascript menjadi teks JSON
+                });
+
+                const hasil = await response.json();
+
+                // 5. Cek respon dari Laravel, jika sukses beri tahu user
+                if (hasil.success) {
+                    alert('Sukses! ' + hasil.message);
+                    formBarang.reset(); // Kosongkan kembali form inputannya
+                } else {
+                    alert('Gagal menyimpan data: ' + JSON.stringify(hasil.errors));
+                }
+
+            } catch (error) {
+                console.error('Terjadi Error:', error);
+                alert('Gagal terhubung ke Server Backend Laravel. Pastikan server Laravel sudah dinyalakan!');
+            }
+        });
+    </script>
+
+</body>
+
+</html>
