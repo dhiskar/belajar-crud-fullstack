@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales - Master Pelanggan (Frontend)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        /* NAVBAR UTAMA SUPER BERSIH */
+        .navbar {
+            background-color: #3498db;
+            display: flex;
+            align-items: center;
+            padding: 18px 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar h3 {
+            color: white;
+            margin: 0;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .navbar h3:hover {
+            color: #edf2f7;
+        }
+
+        /* BREADCRUMBS BAR */
+        .breadcrumbs-bar {
+            background-color: #f0f3f4;
+            padding: 10px 20px;
+            border-bottom: 1px solid #dcdde1;
+            font-size: 13px;
+            color: #7f8c8d;
+        }
+
+        /* STRUKTUR UTAMA */
+        .main-content {
+            padding: 25px;
+        }
+
+        /* DESIGN MENU TAB */
+        .tab-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            color: #555;
+            transition: all 0.3s;
+        }
+
+        .tab-btn:hover {
+            background-color: #d0d0d0;
+        }
+
+        .tab-btn.active {
+            background-color: #3498db;
+            color: white;
+        }
+
+        /* KONTEN TAB */
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 25px;
+            border-radius: 6px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .tab-content h2 {
+            margin-top: 0;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 8px;
+            font-size: 18px;
+        }
+
+        /* FORM INPUT STYLING */
+        .form-group {
+            margin-bottom: 15px;
+            max-width: 600px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+            font-size: 13px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 8px 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: inherit;
+        }
+
+        textarea {
+            resize: vertical;
+            height: 70px;
+        }
+
+        .btn-save {
+            padding: 10px 20px;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .btn-save:hover {
+            background-color: #219653;
+        }
+
+        /* TABEL DATA STYLING */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th,
+        td {
+            padding: 10px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            font-size: 13px;
+        }
+
+        th {
+            background-color: #34495e;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .badge-code {
+            background-color: #e7f3fe;
+            color: #1e88e5;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .badge-relasi {
+            background-color: #f3e5f5;
+            color: #8e24aa;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .btn-action {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .btn-edit {
+            background-color: #f1c40f;
+            color: #333;
+        }
+
+        .btn-delete {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .loading-text {
+            font-style: italic;
+            color: #7f8c8d;
+            padding: 15px 0;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+        <h3 onclick="window.location.href='index.html'" title="Klik untuk kembali ke Menu Utama">
+            🏢 BIOPLAST ERP
+        </h3>
+    </div>
+
+    <div class="breadcrumbs-bar">🏠 / SALES / FILE INDUK / MASTER PELANGGAN</div>
+
+    <div class="main-content">
+        <div class="tab-container">
+            <button class="tab-btn active" onclick="switchTab('tab-input')">➕ Input Data Baru</button>
+            <button class="tab-btn" onclick="switchTab('tab-list')">📋 Daftar Master Pelanggan</button>
+        </div>
+
+        <div id="tab-input" class="tab-content active">
+            <h2>Form Input Data Master Pelanggan</h2>
+            <form id="formPelanggan">
+                <div class="form-group">
+                    <label for="kd_customer">Kode Pelanggan / Customer</label>
+                    <input type="text" id="kd_customer" placeholder="Contoh: CUST-0001" required>
+                </div>
+                <div class="form-group">
+                    <label for="nama_customer">Nama Perusahaan / Pelanggan</label>
+                    <input type="text" id="nama_customer" placeholder="Masukkan nama pelanggan..." required>
+                </div>
+
+                <div class="form-group">
+                    <label for="kd_jenis_customer">Jenis Pelanggan (Relasi)</label>
+                    <select id="kd_jenis_customer" required>
+                        <option value="">-- Mohon Tunggu, Memuat Data Jenis Pelanggan... --</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="kd_salesman">Salesman Penanggung Jawab (Relasi)</label>
+                    <select id="kd_salesman" required>
+                        <option value="">-- Mohon Tunggu, Memuat Data Salesman... --</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="alamat">Alamat Lengkap Kantor / Pengiriman</label>
+                    <textarea id="alamat" placeholder="Masukkan alamat lengkap perusahaan..." required></textarea>
+                </div>
+
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="btn-save">Simpan Pelanggan</button>
+                    <button type="button" id="btnBatal" onclick="resetFormKeAwal()"
+                        style="display: none; padding: 10px 20px; background-color: #7f8c8d; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px;">❌
+                        Batal</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="tab-list" class="tab-content">
+            <h2>Daftar Riwayat Master Pelanggan</h2>
+
+            <div style="margin-bottom: 15px; display: flex; gap: 10px;">
+                <button onclick="exportData('excel')"
+                    style="background-color: #27ae60; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px;">
+                    📊 Export to Excel
+                </button>
+                <button onclick="exportData('pdf')"
+                    style="background-color: #e74c3c; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px;">
+                    📄 Export to PDF
+                </button>
+            </div>
+            <div id="loadingStatus" class="loading-text">Menghubungkan ke API Server Laravel... Mohon tunggu...</div>
+
+            <table id="tabelDataPelanggan">
+                <thead>
+                    <tr>
+                        <th style="width: 40px;">No</th>
+                        <th style="width: 110px;">Kode Cust</th>
+                        <th>Nama Pelanggan</th>
+                        <th style="width: 140px;">Jenis Pelanggan</th>
+                        <th style="width: 140px;">Salesman</th>
+                        <th>Alamat</th>
+                        <th style="width: 120px; text-align: center;">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelBodyPelanggan">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "http://127.0.0.1:8000/api/pelanggan";
+        const API_JENIS_URL = "http://127.0.0.1:8000/api/jenis-pelanggan";
+        const API_SALES_URL = "http://127.0.0.1:8000/api/salesman";
+
+        let dataSudahLoaded = false;
+        let isEditMode = false;
+
+        // LOAD DROPDOWN OTOMATIS SAAT HALAMAN DIKUNJUNGI
+        document.addEventListener("DOMContentLoaded", function () {
+            ambilDataDropdownJenis();
+            ambilDataDropdownSalesman();
+        });
+
+        // FUNGSI LOAD DROPDOWN JENIS CUSTOMER
+        function ambilDataDropdownJenis() {
+            const dropdown = document.getElementById('kd_jenis_customer');
+            fetch(API_JENIS_URL)
+                .then(res => res.json())
+                .then(res => {
+                    if (res.success) {
+                        dropdown.innerHTML = '<option value="">-- Pilih Jenis Pelanggan --</option>';
+                        res.data.forEach(item => {
+                            dropdown.innerHTML += `<option value="${item.kd_jenis_customer}">${item.kd_jenis_customer} - ${item.nama_jenis_customer}</option>`;
+                        });
+                    }
+                }).catch(err => console.error("Gagal load dropdown jenis pelanggan"));
+        }
+
+        // FUNGSI LOAD DROPDOWN SALESMAN
+        function ambilDataDropdownSalesman() {
+            const dropdown = document.getElementById('kd_salesman');
+            fetch(API_SALES_URL)
+                .then(res => res.json())
+                .then(res => {
+                    if (res.success) {
+                        dropdown.innerHTML = '<option value="">-- Pilih Salesman --</option>';
+                        res.data.forEach(item => {
+                            dropdown.innerHTML += `<option value="${item.kd_salesman}">${item.kd_salesman} - ${item.nama_salesman}</option>`;
+                        });
+                    }
+                }).catch(err => console.error("Gagal load dropdown salesman"));
+        }
+
+        // FUNGSI TOGGLE TAB
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById(tabId).classList.add('active');
+
+            const targetBtn = document.querySelector(`[onclick="switchTab('${tabId}')"]`);
+            if (targetBtn) targetBtn.classList.add('active');
+
+            if (tabId === 'tab-list' && !dataSudahLoaded) {
+                loadDataDariLaravel();
+            }
+        }
+
+        // 1. GET ALL CUSTOMER DATA WITH RELATION
+        function loadDataDariLaravel() {
+            const loading = document.getElementById('loadingStatus');
+            const tbody = document.getElementById('tabelBodyPelanggan');
+
+            loading.style.display = 'block';
+            tbody.innerHTML = '';
+
+            fetch(API_URL)
+                .then(response => response.json())
+                .then(res => {
+                    if (res.success) {
+                        res.data.forEach((item, index) => {
+                            // Cek antisipasi jika relasi data di backend kosong (null safe)
+                            const namaJenis = item.jenis_pelanggan ? item.jenis_pelanggan.nama_jenis_customer : item.kd_jenis_customer;
+                            const namaSales = item.salesman ? item.salesman.nama_salesman : item.kd_salesman;
+
+                            tbody.innerHTML += `<tr>
+                            <td>${index + 1}</td>
+                            <td><span class="badge-code">${item.kd_customer}</span></td>
+                            <td style="font-weight: bold; color: #2c3e50;">${item.nama_customer}</td>
+                            <td><span class="badge-relasi">${namaJenis}</span></td>
+                            <td><span class="badge-relasi" style="background-color: #e8f5e9; color: #2e7d32;">${namaSales}</span></td>
+                            <td>${item.alamat}</td>
+                            <td style="text-align: center;">
+                                <button class="btn-action btn-edit" onclick="aksiEdit('${item.kd_customer}')">Edit</button>
+                                <button class="btn-action btn-delete" onclick="aksiHapus('${item.kd_customer}')">Hapus</button>
+                            </td>
+                        </tr>`;
+                        });
+                        dataSudahLoaded = true;
+                    }
+                    loading.style.display = 'none';
+                })
+                .catch(err => {
+                    alert("Gagal terhubung ke Server API!");
+                    loading.style.display = 'none';
+                });
+        }
+
+        // 2. FORM SUBMIT (STORE OR UPDATE)
+        document.getElementById('formPelanggan').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const kode = document.getElementById('kd_customer').value;
+            const payload = {
+                kd_customer: kode,
+                nama_customer: document.getElementById('nama_customer').value,
+                kd_jenis_customer: document.getElementById('kd_jenis_customer').value,
+                kd_salesman: document.getElementById('kd_salesman').value,
+                alamat: document.getElementById('alamat').value
+            };
+
+            const urlTarget = isEditMode ? `${API_URL}/${kode}` : API_URL;
+            const methodTarget = isEditMode ? 'PUT' : 'POST';
+
+            fetch(urlTarget, {
+                method: methodTarget,
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+                .then(response => response.json())
+                .then(res => {
+                    if (res.success) {
+                        alert(isEditMode ? 'Sukses! Data Pelanggan Berhasil Diperbarui.' : 'Sukses! Data Pelanggan Berhasil Disimpan.');
+                        dataSudahLoaded = false;
+                        resetFormKeAwal();
+                    } else {
+                        if (res.errors && res.errors.kd_customer) {
+                            alert(`⚠️ Gagal Simpan:\nKode Customer [ ${kode} ] sudah terdaftar di database PT Bioplast Unggul! Silakan gunakan kode lain.`);
+                        } else {
+                            alert('Gagal Sistem: ' + (res.message || 'Terjadi kesalahan pada data input.'));
+                        }
+                    }
+                })
+                .catch(err => alert('Koneksi ke API Server bermasalah atau mati!'));
+        });
+
+        // 3. AKSI EDIT (LOAD DETAIL KE FORM)
+        function aksiEdit(kode) {
+            fetch(`${API_URL}/${kode}`)
+                .then(response => response.json())
+                .then(res => {
+                    if (res.success) {
+                        document.getElementById('kd_customer').value = res.data.kd_customer;
+                        document.getElementById('kd_customer').disabled = true;
+                        document.getElementById('nama_customer').value = res.data.nama_customer;
+                        document.getElementById('kd_jenis_customer').value = res.data.kd_jenis_customer;
+                        document.getElementById('kd_salesman').value = res.data.kd_salesman;
+                        document.getElementById('alamat').value = res.data.alamat;
+
+                        const btnSave = document.querySelector('.btn-save');
+                        btnSave.textContent = "🔄 Update Data Pelanggan";
+                        btnSave.style.backgroundColor = "#f1c40f";
+                        btnSave.style.color = "#333";
+
+                        document.getElementById('btnBatal').style.display = 'inline-block';
+
+                        isEditMode = true;
+                        switchTab('tab-input');
+                    }
+                })
+                .catch(err => alert('Gagal mengambil data lama!'));
+        }
+
+        // FUNGSI RESET FORM KEMBALI KE INPUT BARU
+        function resetFormKeAwal() {
+            document.getElementById('formPelanggan').reset();
+            document.getElementById('kd_customer').disabled = false;
+
+            const btnSave = document.querySelector('.btn-save');
+            btnSave.textContent = "Simpan Pelanggan";
+            btnSave.style.backgroundColor = "#27ae60";
+            btnSave.style.color = "white";
+
+            document.getElementById('btnBatal').style.display = 'none';
+            isEditMode = false;
+        }
+
+        // 4. AKSI HAPUS (DELETE)
+        function aksiHapus(kode) {
+            if (confirm(`Apakah Anda yakin ingin menghapus Pelanggan dengan kode [${kode}] secara permanen?`)) {
+                fetch(`${API_URL}/${kode}`, {
+                    method: 'DELETE',
+                    headers: { 'Accept': 'application/json' }
+                })
+                    .then(response => response.json())
+                    .then(res => {
+                        if (res.success) {
+                            alert('Data sukses dihapus dari PostgreSQL!');
+                            dataSudahLoaded = false;
+                            loadDataDariLaravel();
+                        }
+                    })
+                    .catch(err => alert('Gagal mengeksekusi hapus data!'));
+            }
+        }
+
+        // FUNGSI TRIGGER DOWNLOAD LAPORAN
+        function exportData(format) {
+            if (format === 'excel') {
+                window.open("http://127.0.0.1:8000/api/pelanggan/export-excel", "_blank");
+            } else if (format === 'pdf') {
+                window.open("http://127.0.0.1:8000/api/pelanggan/export-pdf", "_blank");
+            }
+        }
+    </script>
+</body>
+
+</html>

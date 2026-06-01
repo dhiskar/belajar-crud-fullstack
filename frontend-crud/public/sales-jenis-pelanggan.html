@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales - Jenis Pelanggan (Frontend)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        /* NAVBAR UTAMA SUPER BERSIH */
+        .navbar {
+            background-color: #3498db;
+            display: flex;
+            align-items: center;
+            padding: 18px 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar h3 {
+            color: white;
+            margin: 0;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .navbar h3:hover {
+            color: #edf2f7;
+        }
+
+        /* BREADCRUMBS BAR */
+        .breadcrumbs-bar {
+            background-color: #f0f3f4;
+            padding: 10px 20px;
+            border-bottom: 1px solid #dcdde1;
+            font-size: 13px;
+            color: #7f8c8d;
+        }
+
+        /* STRUKTUR UTAMA */
+        .main-content {
+            padding: 25px;
+        }
+
+        /* DESIGN MENU TAB */
+        .tab-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            color: #555;
+            transition: all 0.3s;
+        }
+
+        .tab-btn:hover {
+            background-color: #d0d0d0;
+        }
+
+        .tab-btn.active {
+            background-color: #3498db;
+            color: white;
+        }
+
+        /* KONTEN TAB */
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 25px;
+            border-radius: 6px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .tab-content h2 {
+            margin-top: 0;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 8px;
+            font-size: 18px;
+        }
+
+        /* FORM INPUT STYLING */
+        .form-group {
+            margin-bottom: 15px;
+            max-width: 600px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+            font-size: 13px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 8px 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: inherit;
+        }
+
+        textarea {
+            resize: vertical;
+            height: 70px;
+        }
+
+        .btn-save {
+            padding: 10px 20px;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .btn-save:hover {
+            background-color: #219653;
+        }
+
+        /* TABEL DATA STYLING */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th,
+        td {
+            padding: 10px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            font-size: 13px;
+        }
+
+        th {
+            background-color: #34495e;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .badge-code {
+            background-color: #e7f3fe;
+            color: #1e88e5;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .btn-action {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .btn-edit {
+            background-color: #f1c40f;
+            color: #333;
+        }
+
+        .btn-delete {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .loading-text {
+            font-style: italic;
+            color: #7f8c8d;
+            padding: 15px 0;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+        <h3 onclick="window.location.href='index.html'" title="Klik untuk kembali ke Menu Utama">
+            🏢 BIOPLAST ERP
+        </h3>
+    </div>
+
+    <div class="breadcrumbs-bar">🏠 / SALES / FILE INDUK / JENIS PELANGGAN</div>
+
+    <div class="main-content">
+        <div class="tab-container">
+            <button class="tab-btn active" onclick="switchTab('tab-input')">➕ Input Data Baru</button>
+            <button class="tab-btn" onclick="switchTab('tab-list')">📋 Daftar Jenis Pelanggan</button>
+        </div>
+
+        <div id="tab-input" class="tab-content active">
+            <h2>Form Input Jenis Pelanggan</h2>
+            <form id="formJenisCustomer">
+                <div class="form-group">
+                    <label for="kd_jenis_customer">Kode Jenis Customer</label>
+                    <input type="text" id="kd_jenis_customer" placeholder="Contoh: JNS-001" required>
+                </div>
+                <div class="form-group">
+                    <label for="nama_jenis_customer">Nama Jenis Customer</label>
+                    <input type="text" id="nama_jenis_customer" placeholder="Contoh: Distributor / Plastic Manufacturer"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label for="keterangan">Keterangan</label>
+                    <textarea id="keterangan" placeholder="Masukkan keterangan tambahan..."></textarea>
+                </div>
+
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="btn-save">Simpan Jenis Customer</button>
+                    <button type="button" id="btnBatal" onclick="resetFormKeAwal()"
+                        style="display: none; padding: 10px 20px; background-color: #7f8c8d; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px;">❌
+                        Batal</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="tab-list" class="tab-content">
+            <h2>Daftar Riwayat Jenis Pelanggan</h2>
+
+            <div style="margin-bottom: 15px; display: flex; gap: 10px;">
+                <button onclick="exportData('excel')"
+                    style="background-color: #27ae60; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px;">
+                    📊 Export to Excel
+                </button>
+                <button onclick="exportData('pdf')"
+                    style="background-color: #e74c3c; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px;">
+                    📄 Export to PDF
+                </button>
+            </div>
+            <div id="loadingStatus" class="loading-text">Menghubungkan ke API Server Laravel... Mohon tunggu...</div>
+
+            <table id="tabelDataJenis">
+                <thead>
+                    <tr>
+                        <th style="width: 50px;">No</th>
+                        <th style="width: 150px;">Kode Jenis</th>
+                        <th>Nama Jenis Customer</th>
+                        <th>Keterangan</th>
+                        <th style="width: 150px; text-align: center;">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelBodyJenis">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "http://127.0.0.1:8000/api/jenis-pelanggan";
+        let dataSudahLoaded = false;
+        let isEditMode = false;
+
+        // FUNGSI TOGGLE TAB
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById(tabId).classList.add('active');
+
+            const targetBtn = document.querySelector(`[onclick="switchTab('${tabId}')"]`);
+            if (targetBtn) targetBtn.classList.add('active');
+
+            if (tabId === 'tab-list' && !dataSudahLoaded) {
+                loadDataDariLaravel();
+            }
+        }
+
+        // 1. GET ALL DATA
+        function loadDataDariLaravel() {
+            const loading = document.getElementById('loadingStatus');
+            const tbody = document.getElementById('tabelBodyJenis');
+
+            loading.style.display = 'block';
+            tbody.innerHTML = '';
+
+            fetch(API_URL)
+                .then(response => response.json())
+                .then(res => {
+                    if (res.success) {
+                        res.data.forEach((item, index) => {
+                            tbody.innerHTML += `<tr>
+                            <td>${index + 1}</td>
+                            <td><span class="badge-code">${item.kd_jenis_customer}</span></td>
+                            <td>${item.nama_jenis_customer}</td>
+                            <td>${item.keterangan ?? '-'}</td>
+                            <td style="text-align: center;">
+                                <button class="btn-action btn-edit" onclick="aksiEdit('${item.kd_jenis_customer}')">Edit</button>
+                                <button class="btn-action btn-delete" onclick="aksiHapus('${item.kd_jenis_customer}')">Hapus</button>
+                            </td>
+                        </tr>`;
+                        });
+                        dataSudahLoaded = true;
+                    }
+                    loading.style.display = 'none';
+                })
+                .catch(err => {
+                    alert("Gagal terhubung ke Server API!");
+                    loading.style.display = 'none';
+                });
+        }
+
+        // 2. FORM SUBMIT (SIMPAN BARU ATAU UPDATE DATA)
+        document.getElementById('formJenisCustomer').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const kd_jenis = document.getElementById('kd_jenis_customer').value;
+            const payload = {
+                kd_jenis_customer: kd_jenis,
+                nama_jenis_customer: document.getElementById('nama_jenis_customer').value,
+                keterangan: document.getElementById('keterangan').value
+            };
+
+            const urlTarget = isEditMode ? `${API_URL}/${kd_jenis}` : API_URL;
+            const methodTarget = isEditMode ? 'PUT' : 'POST';
+
+            fetch(urlTarget, {
+                method: methodTarget,
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+                .then(response => response.json())
+                .then(res => {
+                    if (res.success) {
+                        alert(isEditMode ? 'Sukses! Data Berhasil Diperbarui.' : 'Sukses! Data Berhasil Disimpan.');
+                        dataSudahLoaded = false;
+                        resetFormKeAwal();
+                    } else {
+                        // PENANGANAN VALIDASI ERROR KODE KEMBAR
+                        if (res.errors && res.errors.kd_jenis_customer) {
+                            alert(`⚠️ Gagal Simpan:\nKode Jenis [ ${kd_jenis} ] sudah terdaftar di database PT Bioplast Unggul! Silakan gunakan kode lain.`);
+                        } else {
+                            alert('Gagal Sistem: ' + (res.message || 'Terjadi kesalahan pada data input.'));
+                        }
+                    }
+                })
+                .catch(err => alert('Koneksi ke API Server bermasalah atau mati!'));
+        });
+
+        // 3. AKSI EDIT
+        function aksiEdit(kode) {
+            fetch(`${API_URL}/${kode}`)
+                .then(response => response.json())
+                .then(res => {
+                    if (res.success) {
+                        document.getElementById('kd_jenis_customer').value = res.data.kd_jenis_customer;
+                        document.getElementById('kd_jenis_customer').disabled = true;
+                        document.getElementById('nama_jenis_customer').value = res.data.nama_jenis_customer;
+                        document.getElementById('keterangan').value = res.data.keterangan;
+
+                        const btnSave = document.querySelector('.btn-save');
+                        btnSave.textContent = "🔄 Update Jenis Customer";
+                        btnSave.style.backgroundColor = "#f1c40f";
+                        btnSave.style.color = "#333";
+
+                        document.getElementById('btnBatal').style.display = 'inline-block';
+
+                        isEditMode = true;
+                        switchTab('tab-input');
+                    }
+                })
+                .catch(err => alert('Gagal mengambil data lama!'));
+        }
+
+        // FUNGSI RESET FORM KEMBALI KE SEMULA
+        function resetFormKeAwal() {
+            document.getElementById('formJenisCustomer').reset();
+            document.getElementById('kd_jenis_customer').disabled = false;
+
+            const btnSave = document.querySelector('.btn-save');
+            btnSave.textContent = "Simpan Jenis Customer";
+            btnSave.style.backgroundColor = "#27ae60";
+            btnSave.style.color = "white";
+
+            document.getElementById('btnBatal').style.display = 'none';
+            isEditMode = false;
+        }
+
+        // 4. AKSI HAPUS (DELETE)
+        function aksiHapus(kode) {
+            if (confirm(`Apakah Anda yakin ingin menghapus Jenis Customer dengan kode [${kode}] secara permanen?`)) {
+                fetch(`${API_URL}/${kode}`, {
+                    method: 'DELETE',
+                    headers: { 'Accept': 'application/json' }
+                })
+                    .then(response => response.json())
+                    .then(res => {
+                        if (res.success) {
+                            alert('Data sukses dihapus dari PostgreSQL!');
+                            dataSudahLoaded = false;
+                            loadDataDariLaravel();
+                        }
+                    })
+                    .catch(err => alert('Gagal mengeksekusi hapus data!'));
+            }
+        }
+
+        // FUNGSI EXPORT LAPORAN
+        function exportData(format) {
+            if (format === 'excel') {
+                window.open("http://127.0.0.1:8000/api/jenis-pelanggan/export-excel", "_blank");
+            } else if (format === 'pdf') {
+                window.open("http://127.0.0.1:8000/api/jenis-pelanggan/export-pdf", "_blank");
+            }
+        }
+    </script>
+</body>
+
+</html>

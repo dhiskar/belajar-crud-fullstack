@@ -4,158 +4,240 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Input Persediaan Barang</title>
+    <title>BIOPLAST ERP - Dashboard</title>
     <style>
-        /* Gaya tampilan agar form berada di tengah dan rapi */
         body {
             font-family: Arial, sans-serif;
-            margin: 40px;
+            margin: 0;
+            padding: 0;
             background-color: #f4f4f9;
         }
 
-        .container {
-            max-width: 500px;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin: 0 auto;
+        /* NAVBAR UTAMA */
+        .navbar {
+            background-color: #3498db;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
-        h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #555;
-        }
-
-        input,
-        select {
-            width: 100%;
-            padding: 10px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: #007bff;
+        .navbar h3 {
             color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
+            margin: 0;
+            padding-right: 30px;
+            font-size: 18px;
             font-weight: bold;
-            margin-top: 10px;
         }
 
-        button:hover {
-            background-color: #0056b3;
+        .nav-modules {
+            display: flex;
+        }
+
+        /* TOMBOL MENU UTAMA */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropbtn {
+            color: #e3f2fd;
+            padding: 18px 20px;
+            background: none;
+            border: none;
+            font-weight: bold;
+            font-size: 13px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .dropbtn:hover,
+        .dropdown:hover .dropbtn {
+            background-color: #2980b9;
+            color: white;
+        }
+
+        /* DROPDOWN KATEGORI (TINGKAT 1) */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15);
+            z-index: 9999;
+            /* Pastikan angka z-index ini sangat tinggi agar melayang di atas konten form */
+            border-radius: 0 0 4px 4px;
+            top: 100%;
+            /* Pas menempel di bawah bar biru */
+            left: 0;
+        }
+
+        /* DROPDOWN BERTINGKAT (SUB-DROPDOWN SALES KE SAMPING KANAN) */
+        .sub-dropdown {
+            position: relative;
+        }
+
+        .sub-dropdown-content {
+            display: none;
+            position: absolute;
+            left: 100%;
+            /* Dorong penuh ke samping kanan menu induknya */
+            top: 0;
+            background-color: white;
+            min-width: 180px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15);
+            border-radius: 0 4px 4px 4px;
+            z-index: 10000;
+        }
+
+        .dropdown-content a {
+            color: #333;
+            padding: 10px 15px;
+            text-decoration: none;
+            display: block;
+            font-size: 13px;
+            border-bottom: 1px solid #f1f1f1;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+            color: #2980b9;
+        }
+
+        /* TRIGGER MUNCUL DROPDOWN */
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* DROPDOWN BERTINGKAT (SUB-DROPDOWN SALES) */
+        .sub-dropdown {
+            position: relative;
+        }
+
+        .sub-title {
+            font-weight: bold;
+            color: #2c3e50;
+            background-color: #edf2f7;
+            cursor: default;
+        }
+
+        .sub-dropdown-content {
+            display: none;
+            position: absolute;
+            left: 100%;
+            top: 0;
+            background-color: white;
+            min-width: 180px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15);
+            border-radius: 0 4px 4px 4px;
+        }
+
+        /* Munculkan sub-menu saat bapaknya di-hover */
+        .sub-dropdown:hover .sub-dropdown-content {
+            display: block;
+        }
+
+        /* BREADCRUMBS BAR */
+        .breadcrumbs-bar {
+            background-color: #f0f3f4;
+            padding: 10px 20px;
+            border-bottom: 1px solid #dcdde1;
+            font-size: 13px;
+            color: #7f8c8d;
+        }
+
+        /* KONTEN */
+        .main-content {
+            padding: 30px;
+        }
+
+        .welcome-card {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+            max-width: 800px;
+        }
+
+        .welcome-card h1 {
+            color: #2c3e50;
+            margin-top: 0;
         }
     </style>
 </head>
 
 <body>
 
-    <div class="container">
-        <h2>Form Persediaan</h2>
-
-        <form id="formBarang">
-            <div class="form-group">
-                <label for="kode_persediaan">Kode Persediaan</label>
-                <input type="text" id="kode_persediaan" placeholder="Contoh: BRG-001" required>
+    <div class="navbar">
+        <h3>BIOPLAST ERP</h3>
+        <div class="nav-modules">
+            <div class="dropdown">
+                <button class="dropbtn">Accounting ▾</button>
+                <div class="dropdown-content">
+                    <a href="#">General Ledger</a>
+                    <a href="#">Jurnal Voucher</a>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="nama_persediaan">Nama Persediaan</label>
-                <input type="text" id="nama_persediaan" placeholder="Contoh: Plastik Klip Bening" required>
+            <div class="dropdown">
+                <button class="dropbtn">Sales ▾</button>
+                <div class="dropdown-content">
+                    <div class="sub-dropdown">
+                        <a class="sub-title">1. File Induk 📁</a>
+                        <div class="sub-dropdown-content">
+                            <a href="sales-jenis-pelanggan.html">Jenis Pelanggan</a>
+                            <a href="sales-salesman.html">Data Salesman</a>
+                            <a href="sales-pelanggan.html">Data Pelanggan</a>
+                        </div>
+                    </div>
+                    <div class="sub-dropdown">
+                        <a class="sub-title">2. Transaksi 💼</a>
+                        <div class="sub-dropdown-content">
+                            <a href="#">Pra SO</a>
+                            <a href="#">SO</a>
+                            <a href="#">Surat Jalan</a>
+                            <a href="#">Faktur</a>
+                            <a href="#">Retur Jual</a>
+                            <a href="#">Rencana Kirim</a>
+                        </div>
+                    </div>
+                    <div class="sub-dropdown">
+                        <a class="sub-title">3. Setup ⚙️</a>
+                        <div class="sub-dropdown-content">
+                            <a href="#">Komisi Sales</a>
+                        </div>
+                    </div>
+                    <div class="sub-dropdown">
+                        <a class="sub-title">4. Laporan 📊</a>
+                        <div class="sub-dropdown-content">
+                            <a href="#">Pelanggan</a>
+                            <a href="#">Sales Order</a>
+                            <a href="#">Surat Jalan</a>
+                            <a href="#">Faktur</a>
+                            <a href="#">Komisi Sales</a>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="satuan">Satuan</label>
-                <select id="satuan">
-                    <option value="Pcs">Pcs</option>
-                    <option value="Box">Box</option>
-                    <option value="Kg">Kg</option>
-                    <option value="Roll">Roll</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="jumlah">Jumlah Stok</label>
-                <input type="number" id="jumlah" placeholder="Contoh: 100" required>
-            </div>
-
-            <div class="form-group">
-                <label for="berat">Berat (Gram)</label>
-                <input type="number" id="berat" placeholder="Contoh: 500" required>
-            </div>
-
-            <div class="form-group">
-                <label for="harga">Harga (Rp)</label>
-                <input type="number" id="harga" placeholder="Contoh: 25000" required>
-            </div>
-
-            <button type="submit">Simpan Barang</button>
-        </form>
+            <div class="dropdown"><button class="dropbtn">Purchase ▾</button></div>
+            <div class="dropdown"><button class="dropbtn">Kas Kecil ▾</button></div>
+            <div class="dropdown"><button class="dropbtn">Finance ▾</button></div>
+            <div class="dropdown"><button class="dropbtn">Inventory ▾</button></div>
+            <div class="dropdown"><button class="dropbtn">Produksi ▾</button></div>
+            <div class="dropdown"><button class="dropbtn">Import ▾</button></div>
+            <div class="dropdown"><button class="dropbtn">Piutang Karyawan ▾</button></div>
+            <div class="dropdown"><button class="dropbtn">Management Report ▾</button></div>
+        </div>
     </div>
-    <script>
-        // 1. Ambil elemen form berdasarkan ID-nya
-        const formBarang = document.getElementById('formBarang');
 
-        // 2. Pasang fungsi pengintai (Event Listener) ketika form di-submit (tombol diklik)
-        formBarang.addEventListener('submit', async (e) => {
-            e.preventDefault(); // Mencegah browser agar tidak refresh halaman
+    <div class="breadcrumbs-bar">🏠 / HOME / DASHBOARD</div>
 
-            // 3. Ambil data nilai dari masing-masing kolom inputan
-            const dataBarang = {
-                kode_persediaan: document.getElementById('kode_persediaan').value,
-                nama_persediaan: document.getElementById('nama_persediaan').value,
-                satuan: document.getElementById('satuan').value,
-                jumlah: parseInt(document.getElementById('jumlah').value), // <-- Tambahkan ini
-                berat: parseInt(document.getElementById('berat').value),
-                harga: parseInt(document.getElementById('harga').value)
-            };
-            try {
-                // 4. Tembakkan data ke API Backend Laravel menggunakan metode POST
-                const response = await fetch('http://127.0.0.1:8000/api/items', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(dataBarang) // Ubah data objek javascript menjadi teks JSON
-                });
-
-                const hasil = await response.json();
-
-                // 5. Cek respon dari Laravel, jika sukses beri tahu user
-                if (hasil.success) {
-                    alert('Sukses! ' + hasil.message);
-                    formBarang.reset(); // Kosongkan kembali form inputannya
-                } else {
-                    alert('Gagal menyimpan data: ' + JSON.stringify(hasil.errors));
-                }
-
-            } catch (error) {
-                console.error('Terjadi Error:', error);
-                alert('Gagal terhubung ke Server Backend Laravel. Pastikan server Laravel sudah dinyalakan!');
-            }
-        });
-    </script>
+    <div class="main-content">
+        <div class="welcome-card">
+            <h1>Selamat Datang di PT Bioplast Unggul ERP</h1>
+            <p>Silakan gunakan menu navigasi di atas untuk mengakses modul transaksi dan manajemen data operasional.</p>
+        </div>
+    </div>
 
 </body>
 
